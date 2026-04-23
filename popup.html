@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>Willie QR 產生器</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="app">
+    <!-- Header (full width) -->
+    <header class="header">
+      <div class="brand">
+        <div class="brand-mark">QR</div>
+        <div class="brand-text">
+          <div class="brand-title">Willie QR 產生器</div>
+          <div class="brand-sub">Stylish QR Code Maker</div>
+        </div>
+      </div>
+      <button id="theme-toggle" class="icon-btn" title="切換深淺色" aria-label="切換深淺色">
+        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </header>
+
+    <div class="grid">
+      <!-- LEFT: Preview (sticky) -->
+      <aside class="pane pane-left">
+        <div class="input-section">
+          <label class="field-label" for="qr-input">網址或文字</label>
+          <div class="input-wrap">
+            <input id="qr-input" type="text" placeholder="輸入內容或點下方抓取目前分頁網址…" spellcheck="false" />
+            <button id="fetch-url" class="ghost-btn" title="抓取目前分頁網址">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+              抓網址
+            </button>
+          </div>
+        </div>
+
+        <div class="preview-card">
+          <canvas id="qr-canvas" width="520" height="520" aria-label="QR Code 預覽"></canvas>
+          <div id="preview-empty" class="preview-empty">請輸入文字以產生 QR Code</div>
+        </div>
+        <div id="status-line" class="status-line">準備就緒</div>
+
+        <div class="export-section">
+          <button id="save-png" class="primary-btn">下載 PNG</button>
+          <button id="save-svg" class="secondary-btn">下載 SVG</button>
+          <button id="copy-png" class="ghost-btn-full">複製到剪貼簿</button>
+        </div>
+      </aside>
+
+      <!-- RIGHT: Scrollable controls -->
+      <section class="pane pane-right">
+        <!-- Error correction -->
+        <div class="section">
+          <div class="section-head">
+            <h3>容錯率</h3>
+            <span class="hint">LOGO 會自動切到 H</span>
+          </div>
+          <div class="btn-row" role="tablist" data-group="ec">
+            <button class="pill" data-ec="L">L · 7%</button>
+            <button class="pill active" data-ec="M">M · 15%</button>
+            <button class="pill" data-ec="Q">Q · 25%</button>
+            <button class="pill" data-ec="H">H · 30%</button>
+          </div>
+        </div>
+
+        <!-- Logo -->
+        <div class="section">
+          <div class="section-head">
+            <h3>中心 LOGO</h3>
+          </div>
+          <div class="logo-row">
+            <label class="upload-btn" for="logo-file">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <span id="logo-label">上傳圖片</span>
+            </label>
+            <input id="logo-file" type="file" accept="image/*" hidden />
+            <button id="logo-clear" class="danger-btn hidden">清除</button>
+          </div>
+        </div>
+
+        <!-- Data dots -->
+        <div class="section">
+          <div class="section-head"><h3>資料點樣式</h3></div>
+          <div class="style-row" data-group="data">
+            <button class="style-card active" data-style="square" title="標準方塊">
+              <svg viewBox="0 0 46 46"><rect x="8" y="8" width="30" height="30" fill="currentColor"/></svg>
+              <span>方塊</span>
+            </button>
+            <button class="style-card" data-style="dot" title="圓點">
+              <svg viewBox="0 0 46 46"><circle cx="23" cy="23" r="15" fill="currentColor"/></svg>
+              <span>圓點</span>
+            </button>
+            <button class="style-card" data-style="rounded" title="圓角方塊">
+              <svg viewBox="0 0 46 46"><rect x="8" y="8" width="30" height="30" rx="6" fill="currentColor"/></svg>
+              <span>圓角</span>
+            </button>
+            <button class="style-card" data-style="gapped" title="間隔方塊">
+              <svg viewBox="0 0 46 46"><rect x="12" y="12" width="22" height="22" fill="currentColor"/></svg>
+              <span>間隔</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Eye frame -->
+        <div class="section">
+          <div class="section-head"><h3>定位點 · 外框</h3></div>
+          <div class="style-row" data-group="frame">
+            <button class="style-card active" data-style="square">
+              <svg viewBox="0 0 46 46"><rect x="5" y="5" width="36" height="36" fill="none" stroke="currentColor" stroke-width="4"/></svg>
+              <span>直角</span>
+            </button>
+            <button class="style-card" data-style="rounded">
+              <svg viewBox="0 0 46 46"><rect x="5" y="5" width="36" height="36" rx="10" fill="none" stroke="currentColor" stroke-width="4"/></svg>
+              <span>圓角</span>
+            </button>
+            <button class="style-card" data-style="circle">
+              <svg viewBox="0 0 46 46"><circle cx="23" cy="23" r="18" fill="none" stroke="currentColor" stroke-width="4"/></svg>
+              <span>正圓</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Eye center -->
+        <div class="section">
+          <div class="section-head"><h3>定位點 · 內芯</h3></div>
+          <div class="style-row" data-group="center">
+            <button class="style-card active" data-style="square">
+              <svg viewBox="0 0 46 46"><rect x="14" y="14" width="18" height="18" fill="currentColor"/></svg>
+              <span>直角</span>
+            </button>
+            <button class="style-card" data-style="rounded">
+              <svg viewBox="0 0 46 46"><rect x="14" y="14" width="18" height="18" rx="4" fill="currentColor"/></svg>
+              <span>圓角</span>
+            </button>
+            <button class="style-card" data-style="circle">
+              <svg viewBox="0 0 46 46"><circle cx="23" cy="23" r="9" fill="currentColor"/></svg>
+              <span>正圓</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="footer">Design by Willie · v1.0.0</div>
+      </section>
+    </div>
+  </div>
+
+  <script src="lib/qrcode.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

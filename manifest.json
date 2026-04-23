@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "Willie QR 產生器 | Stylish QR Maker",
+  "short_name": "Willie QR",
+  "version": "1.0.0",
+  "description": "一鍵把網址或文字變成漂亮的 QR Code，支援圓點 / 圓角 / 正圓樣式、LOGO 中心圖、PNG 與 SVG 向量輸出。",
+  "action": {
+    "default_title": "Willie QR 產生器",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": ["activeTab"],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
+}
